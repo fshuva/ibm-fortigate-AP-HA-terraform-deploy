@@ -1,0 +1,41 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install terraform
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt install terraform=0.13.7
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        run: terraform init
+
+    # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        run: terraform plan -var SSH_PUBLIC_KEY=fshuva-pub -var VPC=fshuva-vpc-dc -var SUBNET_1=0757-6a338c20-a34c-49ae-ab15-d5c35f0d1551 -var SUBNET_2=0757-58475161-9cd7-4f4b-a4d6-fa5aa5460974 -var SUBNET_3=0757-922d90b4-5e3f-4906-8c0a-0d5e3b93e2d7 -var SUBNET_4=0757-83b88be1-68d7-414f-bd3f-65050bf9b572 -var FGT1_STATIC_IP_PORT1=10.241.0.11 -var FGT1_STATIC_IP_PORT2=10.241.1.11 -var FGT1_STATIC_IP_PORT3=10.241.2.11 -var FGT1_STATIC_IP_PORT4=10.241.3.11 -var FGT1_PORT4_MGMT_GATEWAY=10.241.3.1 -var FGT2_STATIC_IP_PORT1=10.241.0.12 -var FGT2_STATIC_IP_PORT2=10.241.1.12 -var FGT2_STATIC_IP_PORT3=10.241.2.12 -var FGT2_STATIC_IP_PORT4=10.241.3.12 -var FGT2_PORT4_MGMT_GATEWAY=10.241.3.1 -var SECURITY_GROUP=pushcart-unscathed-jaundice-cursor -var CLUSTER_NAME=fortigate-HA-AP-actions-cli -var IBMCLOUD_API_KEY=${{secrets.IBMCLOUD_API_KEY}}
+
+    #   On push to main, build or change infrastructure according to Terraform configuration files
+    #   Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+      - name: Terraform Apply
+    #    if: github.ref == refs/heads/main && github.event_name == push
+        run: terraform apply -auto-approve -var SSH_PUBLIC_KEY=fshuva-pub -var VPC=fshuva-vpc-dc -var SUBNET_1=0757-6a338c20-a34c-49ae-ab15-d5c35f0d1551 -var SUBNET_2=0757-58475161-9cd7-4f4b-a4d6-fa5aa5460974 -var SUBNET_3=0757-922d90b4-5e3f-4906-8c0a-0d5e3b93e2d7 -var SUBNET_4=0757-83b88be1-68d7-414f-bd3f-65050bf9b572 -var FGT1_STATIC_IP_PORT1=10.241.0.11 -var FGT1_STATIC_IP_PORT2=10.241.1.11 -var FGT1_STATIC_IP_PORT3=10.241.2.11 -var FGT1_STATIC_IP_PORT4=10.241.3.11 -var FGT1_PORT4_MGMT_GATEWAY=10.241.3.1 -var FGT2_STATIC_IP_PORT1=10.241.0.12 -var FGT2_STATIC_IP_PORT2=10.241.1.12 -var FGT2_STATIC_IP_PORT3=10.241.2.12 -var FGT2_STATIC_IP_PORT4=10.241.3.12 -var FGT2_PORT4_MGMT_GATEWAY=10.241.3.1 -var SECURITY_GROUP=pushcart-unscathed-jaundice-cursor -var CLUSTER_NAME=fortigate-HA-AP-actions-cli -var IBMCLOUD_API_KEY=${{secrets.IBMCLOUD_API_KEY}}
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var SSH_PUBLIC_KEY=fshuva-pub -var VPC=fshuva-vpc-dc -var SUBNET_1=0757-6a338c20-a34c-49ae-ab15-d5c35f0d1551 -var SUBNET_2=0757-58475161-9cd7-4f4b-a4d6-fa5aa5460974 -var SUBNET_3=0757-922d90b4-5e3f-4906-8c0a-0d5e3b93e2d7 -var SUBNET_4=0757-83b88be1-68d7-414f-bd3f-65050bf9b572 -var FGT1_STATIC_IP_PORT1=10.241.0.11 -var FGT1_STATIC_IP_PORT2=10.241.1.11 -var FGT1_STATIC_IP_PORT3=10.241.2.11 -var FGT1_STATIC_IP_PORT4=10.241.3.11 -var FGT1_PORT4_MGMT_GATEWAY=10.241.3.1 -var FGT2_STATIC_IP_PORT1=10.241.0.12 -var FGT2_STATIC_IP_PORT2=10.241.1.12 -var FGT2_STATIC_IP_PORT3=10.241.2.12 -var FGT2_STATIC_IP_PORT4=10.241.3.12 -var FGT2_PORT4_MGMT_GATEWAY=10.241.3.1 -var SECURITY_GROUP=pushcart-unscathed-jaundice-cursor -var CLUSTER_NAME=fortigate-HA-AP-actions-cli -var IBMCLOUD_API_KEY=${{secrets.IBMCLOUD_API_KEY}}
